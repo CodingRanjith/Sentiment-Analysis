@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Container, Row, Col, Button, Card } from 'react-bootstrap';
+import { Row, Col, Button, Card } from 'react-bootstrap';
 import { FaInstagram, FaFacebook, FaTwitter } from 'react-icons/fa';
 import SocialMediaPostModal from './components/SocialMediaPostModal';
 
