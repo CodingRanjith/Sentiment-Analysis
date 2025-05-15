@@ -1,0 +1,75 @@
+/* Fade in animation */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 1s ease forwards;
+}
+
+/* Glow effect on hover for buttons */
+.btn-glow {
+  position: relative;
+  transition: all 0.3s ease;
+  box-shadow: 0 0 5px rgba(255, 255, 255, 0.2);
+}
+
+.btn-glow:hover {
+  box-shadow:
+    0 0 8px #f87171,
+    0 0 15px #fbbf24,
+    0 0 20px #fbbf24,
+    0 0 40px #fbbf24;
+  transform: scale(1.05);
+}
+
+/* Card hover effect */
+.card-hover {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 4px 10px rgb(0 0 0 / 0.1);
+  border-radius: 1rem;
+}
+
+.card-hover:hover {
+  box-shadow: 0 8px 25px rgb(0 0 0 / 0.25);
+  transform: scale(1.05);
+}
+
+/* Modal styles */
+.modal-content-custom {
+  border-radius: 1rem !important;
+  background: linear-gradient(135deg, #6b46c1, #b794f4) !important;
+  color: white !important;
+  box-shadow: 0 10px 25px rgba(107, 70, 193, 0.7) !important;
+}
+
+.modal-header-custom {
+  border-bottom: none !important;
+  font-weight: 700 !important;
+  font-size: 1.8rem !important;
+  letter-spacing: 0.05em !important;
+}
+
+.modal-body-custom {
+  padding: 2rem !important;
+  font-size: 1.1rem !important;
+}
+
+/* Responsive text */
+@media (max-width: 768px) {
+  h2.text-5xl {
+    font-size: 2.5rem !important;
+  }
+  p.text-xl {
+    font-size: 1rem !important;
+  }
+}
+
+/* Container padding for small screens */
+@media (max-width: 480px) {
+  .container-responsive {
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+  }
+}
