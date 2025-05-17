@@ -1,10 +1,9 @@
 import React, { useState } from "react";
-import { Modal, Button, Form, Alert } from "react-bootstrap";
+import { Modal, Button, Form } from "react-bootstrap";
 import { FaHeart, FaRegComment, FaShare } from "react-icons/fa";
-import { analyzeSentiment } from '../utils/sentimentAnalysis';
-import postImages from "../assets/f.jpg"; 
-
-
+import { analyzeSentiment } from "../utils/sentimentAnalysis";
+import "animate.css";
+import postImages from "../assets/f.jpg"; // Replace with your actual image path
 
 // Dummy comments for each platform
 const dummyComments = {
@@ -22,44 +21,43 @@ const dummyComments = {
   ],
 };
 
-const SocialMediaPostModal = ({ showModal, onHide, selectedPlatform, postImage }) => {
+const SocialMediaPostModal = ({ showModal, onHide, selectedPlatform }) => {
   const [comment, setComment] = useState("");
-  const [sentiment, setSentiment] = useState("");
+  const [sentiment, setSentiment] = useState(null);
 
   const handleSubmit = () => {
-    setSentiment(analyzeSentiment(comment));
+    const result = analyzeSentiment(comment);
+    setSentiment(result);
   };
 
   const handleClose = () => {
     setComment("");
-    setSentiment("");
+    setSentiment(null);
     onHide();
   };
 
   return (
-    <Modal
-      show={showModal}
-      onHide={handleClose}
-      centered
-      size="lg"
-      dialogClassName="rounded-lg"
-      contentClassName="p-0"
-    >
-      <div className="bg-white rounded-lg shadow-lg overflow-hidden max-w-xl mx-auto">
+    <Modal show={showModal} onHide={handleClose} centered size="lg" contentClassName="p-0">
+      <div className="bg-white rounded-lg shadow-lg max-w-2xl w-full mx-auto overflow-hidden">
+
         {/* Header */}
-        <div className="flex items-center p-4 border-b border-gray-200">
-          <div className="rounded-full bg-gray-300 h-10 w-10 flex items-center justify-center font-bold text-gray-700 mr-3">
-            {selectedPlatform[0]}
+        <div className="flex items-center justify-between p-4 border-b border-gray-200">
+          <div className="flex items-center">
+            <img
+              src={`https://i.pravatar.cc/150?u=${selectedPlatform}`}
+              alt="profile"
+              className="h-10 w-10 rounded-full object-cover mr-3"
+            />
+            <div>
+              <h5 className="text-sm font-bold">{selectedPlatform}_official</h5>
+              <p className="text-xs text-gray-500">Just now • India</p>
+            </div>
           </div>
-          <h5 className="text-lg font-semibold">{selectedPlatform}</h5>
+          <span className="text-gray-400 text-lg cursor-pointer">•••</span>
         </div>
 
         {/* Post Image */}
-        <img
-          src={postImages}
-          alt={`${selectedPlatform} post`}
-          className="w-full object-cover max-h-96"
-        />
+        <img src={postImages} alt="Post" className="w-full h-auto object-cover" />
 
         {/* Post Actions */}
         <div className="flex items-center px-4 py-3 space-x-6 border-b border-gray-200">
@@ -95,7 +93,7 @@ const SocialMediaPostModal = ({ showModal, onHide, selectedPlatform, postImage }
           ))}
         </div>
 
-        {/* Comment Input */}
+        {/* Comment Input + Sentiment */}
         <div className="p-4">
           <Form>
             <Form.Group controlId="commentTextarea">
@@ -118,19 +116,69 @@ const SocialMediaPostModal = ({ showModal, onHide, selectedPlatform, postImage }
               Submit Comment
             </Button>
           </Form>
+
+          {/* Sentiment Output */}
           {sentiment && (
-            <Alert
-              variant={
-                sentiment === "Positive"
-                  ? "success"
-                  : sentiment === "Negative"
-                  ? "danger"
-                  : "secondary"
-              }
-              className="text-center font-semibold mt-3"
-            >
-              Sentiment: <strong>{sentiment}</strong>
-            </Alert>
+            <div className="mt-5 text-center bg-white p-6 rounded-lg shadow-md animate__animated animate__fadeInUp">
+              {/* Sentiment Label + Emoji */}
+              <h4 className="text-2xl font-semibold mb-2">
+                The sentiment of the text is{" "}
+                <span
+                  className={`${
+                    sentiment.label === "Positive"
+                      ? "text-green-600"
+                      : sentiment.label === "Negative"
+                      ? "text-red-600"
+                      : "text-gray-600"
+                  }`}
+                >
+                  {sentiment.label}
+                </span>
+              </h4>
+
+              <div className="text-5xl mb-4">
+                {sentiment.label === "Positive"
+                  ? "😊"
+                  : sentiment.label === "Negative"
+                  ? "😠"
+                  : "😐"}
+              </div>
+
+              {/* Score Grid */}
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-4">
+                <div className="bg-gray-900 text-red rounded-lg p-4 shadow">
+                  <h3 className="text-3xl font-bold">{sentiment.score}</h3>
+                  <p className="text-sm mt-1">Sentiment Score</p>
+                </div>
+                <div className="bg-gray-900 text-green rounded-lg p-4 shadow">
+                  <h3 className="text-3xl font-bold">{sentiment.wordCount}</h3>
+                  <p className="text-sm mt-1">Words Detected</p>
+                </div>
+                <div className="bg-gray-900 text-red rounded-lg p-4 shadow">
+                  <h3 className="text-3xl font-bold">{sentiment.comparative.toFixed(2)}</h3>
+                  <p className="text-sm mt-1">Comparative Score</p>
+                </div>
+              </div>
+
+              {/* Sentiment Words */}
+              <div className="mt-6">
+                <h6 className="font-semibold mb-3 text-gray-700">Sentiment Words</h6>
+                <div className="flex flex-wrap justify-center gap-2">
+                  {sentiment.words.length > 0 ? (
+                    sentiment.words.map((word, idx) => (
+                      <span
+                        key={idx}
+                        className="bg-gray-200 text-gray-800 px-3 py-1 rounded-full text-sm font-medium shadow"
+                      >
+                        {word}
+                      </span>
+                    ))
+                  ) : (
+                    <span className="text-gray-500">No sentiment words detected.</span>
+                  )}
+                </div>
+              </div>
+            </div>
           )}
         </div>
       </div>
